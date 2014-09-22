@@ -1,65 +1,67 @@
-// jshint node:true, strict:false
+// jshint strict:false
+import { extend } from './utils';
+import ReadableStream from 'readable/constructor';
 
-var extend = require('./utils').extend;
+import {
+  forEach,
+  map,
+  filter,
+  some,
+  every,
+  reduce,
+  concat,
+} from './readable/array-extras';
 
-function delegate(context, fn) {
-}
+import {
+  single,
+  first,
+  last,
+  take,
+  skip,
+  takeUntil,
+  skipUntil,
+  until,
+} from './readable/slicing';
 
+import {
+  flatten,
+  flattenArray,
+  delay,
+  unique,
+  accumulate,
+  toArray,
+  toPromise,
+  dispose,
+} from './readable/methods';
 
-function ReadableStream(subscribe) {
-  this._subscribe = subscribe;
-}
 
 extend(ReadableStream.prototype, {
+  forEach: forEach,
+  map: map,
+  filter: filter,
+  some: some,
+  every: every,
+  reduce: reduce,
+  concat: concat,
 
-  _delegate: function(onNext) {
-    var self = this;
-    return new ReadableStream(function(onNext, onError, onComplete) {
-      return self.subscribe(onNext.bind(self), onError, onComplete)
-    });
-  },
+  single: single,
+  first: first,
+  last: last,
+  take: take,
+  skip: skip,
+  takeUntil: takeUntil,
+  skipUntil: skipUntil,
+  until: until,
 
-  /**
-   * @returns {Promise<null>} A promise to be rejected if the stream throws an
-   *   error or to be resolved when the stream is completed.
-   */
-  forEach: function(iterator, context) {
-    var self = this;
-    var count = 0;
-    return new Promise(function(resolve, reject) {
-      return self.subscribe(function(value) {
-        iterator.call(context, value, count++, self);
-      }, reject, resolve);
-    });
-  }
-
-  map: function(iterator, context) {
-    var count = 0;
-    return this._delegate(function(value) {
-      var result
-      try {
-          result = iterator.call(context, value, count++, self);
-      } catch (exception) {
-          onError(exception);
-          return;
-      }
-      onNext(result);
-    });
-  },
-
-  filter: function(test, context) {
-    var count = 0;
-    return this._delegate(function(value) {
-
-    });
-  }
-
+  flatten: flatten,
+  flattenArray: flattenArray,
+  delay: delay,
+  unique: unique,
+  accumulate: accumulate,
+  toArray: toArray,
+  toPromise: toPromise,
+  dispose: dispose,
 });
 
-  forEach(iterator) : null;
-  map(iterator) : Readable;
-  filter(test) : Readable;
-  reduce(iterator, seed) : Promise<T>;
-  some(test) : Promise<bool>;
-  every(test) : Promise<bool>;
-  concat(Readable) : Readable
+
+export default ReadableStream;

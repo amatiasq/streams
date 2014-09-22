@@ -11,22 +11,22 @@ module.exports = function(grunt) {
 
     files: {
       src: 'src/**/*.js',
-      out: {
-        cjs: 'dist/stream.cjs.js',
-        amd: 'dist/stream.amd.js',
-      }
     },
 
     transpile: {
       cjs: {
         type: 'cjs',
-        src: '<%= files.src %>',
-        dest: '<%= out.cjs %>',
+        expand: true,
+        cwd: 'src/',
+        src: '**/*.js',
+        dest: 'dist/cjs/',
       },
       amd: {
         type: 'amd',
-        src: '<%= files.src %>',
-        dest: '<%= out.amd %>',
+        expand: true,
+        cwd: 'src/',
+        src: '**/*.js',
+        dest: 'dist/amd/',
       },
     },
 
