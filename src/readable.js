@@ -9,7 +9,7 @@ import {
   some,
   every,
   reduce,
-  concat,
+  concat
 } from './readable/array-extras';
 
 import {
@@ -20,7 +20,7 @@ import {
   skip,
   takeUntil,
   skipUntil,
-  until,
+  until
 } from './readable/slicing';
 
 import {
@@ -31,7 +31,7 @@ import {
   accumulate,
   toArray,
   toPromise,
-  dispose,
+  dispose
 } from './readable/methods';
 
 

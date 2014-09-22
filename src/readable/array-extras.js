@@ -14,7 +14,7 @@ export function forEach(iterator, context) {
       iterator.call(context, value, count++, self);
     }, reject, resolve);
   });
-};
+}
 
 /**
  * @param {Function} iterator
@@ -29,7 +29,7 @@ export function map(iterator, context) {
       onNext(iterator.call(context, value, count++, self));
     }, onError, onComplete);
   });
-};
+}
 
 /**
  * @param {Function} test
@@ -45,7 +45,7 @@ export function filter(test, context) {
         onNext(value);
     }, onError, onComplete);
   });
-};
+}
 
 /**
  * @param {Function} test
@@ -61,7 +61,7 @@ export function some(test, context) {
         resolve(true);
     }, reject, resolve.bind(null, false));
   });
-};
+}
 
 /**
  * @param {Function} test
@@ -77,7 +77,7 @@ export function every(test, context) {
         resolve(false);
     }, reject, resolve.bind(null, true));
   });
-};
+}
 
 /**
  * @param {Function} iterator
@@ -97,7 +97,7 @@ export function reduce(iterator, initialValue) {
       resolve(accumulated);
     });
   });
-};
+}
 
 /**
  * @param {Readable} stream
@@ -110,4 +110,4 @@ export function concat(stream) {
       stream.subscribe(onNext, onError, onComplete);
     });
   });
-};
+}

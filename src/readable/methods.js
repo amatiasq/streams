@@ -16,7 +16,7 @@ export function flatten() {
       Promise.all(promises).then(onComplete);
     });
   });
-};
+}
 
 /**
  * @returns {Readable}
@@ -32,7 +32,7 @@ export function flattenArray() {
         onNext(value);
     }, onError, onComplete)
   });
-};
+}
 
 /**
  * @param {Number} milliseconds
@@ -45,23 +45,24 @@ export function delay(milliseconds) {
       setTimeout(onNext.bind(null, value), milliseconds);
     }, onError, onComplete)
   });
-};
+}
 
 /**
  * @param {Function} modifier
  * @returns {Readable}
  */
 export function unique(modifier) {
-  modifier = modifier || function(a) { return a };
+  modifier = modifier || function(a) { return a }
   var self = this;
 
   // TODO
+  throw new Error('Not implemented');
   return new ReadableStream(function(onNext, onError, onComplete) {
     var subscription = self.subscribe(function(value) {
 
     }, onError, onComplete)
   });
-};
+}
 
 /**
  * @param {Function} modifier
@@ -81,7 +82,7 @@ export function accumulate(iterator, seed) {
       onNext(accumulated);
     }, onError, onComplete);
   });
-};
+}
 
 /**
  * @returns {Promise<Array>}
@@ -96,7 +97,7 @@ export function toArray() {
       reject,
       function() { resolve(result) });
   });
-};
+}
 
 /**
  * @returns {Promise<null>}
@@ -106,9 +107,9 @@ export function toPromise() {
   return new Promise(function(resolve, reject) {
     self.subscribe(null, reject, resolve);
   });
-};
+}
 
 /**
  * @returns {null}
  */
-export function dispose() { };
+export function dispose() { }

@@ -28,7 +28,7 @@ export function single() {
       reject(new NonSingleValueStreamError())
     });
   });
-};
+}
 
 /**
  * Returns a promise with the first N items of this stream.
@@ -52,7 +52,7 @@ export function first(count) {
       resolve(values);
     });
   });
-};
+}
 
 /**
  * Returns a promise with the last N items of this stream.
@@ -74,7 +74,7 @@ export function last(count) {
       resolve(values);
     });
   });
-};
+}
 
 /**
  * Returns a stream which will stream the first N items of this stream.
@@ -100,7 +100,7 @@ export function take(count) {
       }
     }, onError, onComplete);
   });
-};
+}
 
 /**
  * Returns a stream which will stream all but the first N items of this stream.
@@ -120,7 +120,7 @@ export function skip(count) {
         onNext(value);
     }, onError, onComplete);
   });
-};
+}
 
 /**
  * This function can receive a Promise, a Stream or a function.
@@ -149,7 +149,7 @@ export function takeUntil(value, context) {
   if (typeof value.then === 'function')
     return takeUntil_promise(this, value);
   return takeUntil_stream(this, value);
-};
+}
 
 function takeUntil_function(self, test, context) {
   return new ReadableStream(function(onNext, onError, onComplete) {
@@ -214,7 +214,7 @@ export function skipUntil(value, context) {
   if (typeof value.then === 'function')
     return takeUntil_promise(this, value);
   return takeUntil_stream(this, value);
-};
+}
 
 function skipUntil_function(self, test, context) {
   var enabled = false;
@@ -250,4 +250,4 @@ function skipUntil_stream(self, stream) {
 }
 
 /** Alias for {#takeUntil} */
-export { until: takeUntil };
+export { takeUntil as until };
