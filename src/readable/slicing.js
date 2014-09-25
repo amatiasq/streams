@@ -1,7 +1,6 @@
 import ReadableStream from './constructor';
-import {
-  NonSingleValueStreamError
-} from '../errors';
+import { isPromise } from '../utils';
+import { NonSingleValueStreamError } from '../errors';
 
 /**
  * Returns a promise with the only value for this stream, if the stream has more
@@ -95,10 +94,12 @@ export function take(count) {
       onNext(value);
       remaining--;
       if (remaining === 0) {
-        onComplete();
         subscription.cancel();
+        onComplete();
       }
     }, onError, onComplete);
+
+    return subscription;
   });
 }
 
@@ -113,7 +114,7 @@ export function skip(count) {
   var remaining = count;
 
   return new ReadableStream(function(onNext, onError, onComplete) {
-    var subscription = self.subscribe(function(value) {
+    return self.subscribe(function(value) {
       if (remaining > 0)
         remaining--;
       else
@@ -146,7 +147,7 @@ export function skip(count) {
 export function takeUntil(value, context) {
   if (typeof value === 'function')
     return takeUntil_function(this, value, context);
-  if (typeof value.then === 'function')
+  if (isPromise(value))
     return takeUntil_promise(this, value);
   return takeUntil_stream(this, value);
 }
@@ -155,11 +156,13 @@ function takeUntil_function(self, test, context) {
   return new ReadableStream(function(onNext, onError, onComplete) {
     var subscription = self.subscribe(function(value) {
       if (test.call(context, value)) {
-        onComplete();
         subscription.cancel();
+        onComplete();
       } else
         onNext(value);
     }, onError, onComplete);
+
+    return subscription;
   });
 }
 
@@ -169,23 +172,25 @@ function takeUntil_promise(self, promise) {
     promise
       .then(subscription.cancel, subscription.cancel)
       .then(onComplete, onError);
+    return subscription;
   });
 }
 
 function takeUntil_stream(self, stream) {
   return new ReadableStream(function(onNext, onError, onComplete) {
     var subscription = self.subscribe(onNext, onError, onComplete);
-
-    function end() {
-      secondSubscription.cancel();
-      subscirption.cancel();
-      onComplete();
-    }
-
     var secondSubscription = stream.subscribe(end, function(error) {
       subscription.cancel();
       onError(error);
     }, end);
+
+    function end() {
+      secondSubscription.cancel();
+      subscription.cancel();
+      onComplete();
+    }
+
+    return end;
   });
 }
 
@@ -211,7 +216,7 @@ function takeUntil_stream(self, stream) {
 export function skipUntil(value, context) {
   if (typeof value === 'function')
     return takeUntil_function(this, value, context);
-  if (typeof value.then === 'function')
+  if (isPromise(value))
     return takeUntil_promise(this, value);
   return takeUntil_stream(this, value);
 }
@@ -220,7 +225,7 @@ function skipUntil_function(self, test, context) {
   var enabled = false;
 
   return new ReadableStream(function(onNext, onError, onComplete) {
-    self.subscribe(function(value) {
+    return self.subscribe(function(value) {
       if (!enabled && test.call(context, value))
         enabled = true;
 
@@ -232,9 +237,14 @@ function skipUntil_function(self, test, context) {
 
 function skipUntil_promise(self, promise) {
   return new ReadableStream(function(onNext, onError, onComplete) {
+    var subscription;
     promise.then(function() {
-      self.subscribe(onNext, onError, onComplete);
+      subscription = self.subscribe(onNext, onError, onComplete);
     }, onError);
+
+    return function() {
+      subscription.cancel();
+    };
   });
 }
 
@@ -244,8 +254,12 @@ function skipUntil_stream(self, stream) {
 
     function start() {
       subscription.cancel();
-      self.subscribe(onNext, onError, onComplete);
+      subscription = self.subscribe(onNext, onError, onComplete);
     }
+
+    return function() {
+      subscription.cancel();
+    };
   });
 }
 

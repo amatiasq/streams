@@ -10,7 +10,7 @@ export function forEach(iterator, context) {
   var self = this;
   var count = 0;
   return new Promise(function(resolve, reject) {
-    return self.subscribe(function(value) {
+    self.subscribe(function(value) {
       iterator.call(context, value, count++, self);
     }, reject, resolve);
   });
@@ -19,13 +19,13 @@ export function forEach(iterator, context) {
 /**
  * @param {Function} iterator
  * @param {Object} context
- * @returns {Readable}
+ * @returns {ReadableStream}
  */
 export function map(iterator, context) {
   var self = this;
   var count = 0;
   return new ReadableStream(function(onNext, onError, onComplete) {
-    self.subscribe(function(value) {
+    return self.subscribe(function(value) {
       onNext(iterator.call(context, value, count++, self));
     }, onError, onComplete);
   });
@@ -34,13 +34,13 @@ export function map(iterator, context) {
 /**
  * @param {Function} test
  * @param {Object} context
- * @returns {Readable}
+ * @returns {ReadableStream}
  */
 export function filter(test, context) {
   var self = this;
   var count = 0;
   return new ReadableStream(function(onNext, onError, onComplete) {
-    self.subscribe(function(value) {
+    return self.subscribe(function(value) {
       if (test.call(context, value, count++, self))
         onNext(value);
     }, onError, onComplete);
@@ -56,10 +56,14 @@ export function some(test, context) {
   var self = this;
   var count = 0;
   return new Promise(function(resolve, reject) {
-    self.subscribe(function(value) {
-      if (test.call(context, value, count++, self))
+    var subscription = self.subscribe(function(value) {
+      if (test.call(context, value, count++, self)) {
+        subscription.cancel();
         resolve(true);
+      }
     }, reject, resolve.bind(null, false));
+
+    return subscription;
   });
 }
 
@@ -72,10 +76,14 @@ export function every(test, context) {
   var self = this;
   var count = 0;
   return new Promise(function(resolve, reject) {
-    self.subscribe(function(value) {
-      if (!test.call(context, value, count++, self))
+    var subscription = self.subscribe(function(value) {
+      if (!test.call(context, value, count++, self)) {
+        subscription.cancel();
         resolve(false);
+      }
     }, reject, resolve.bind(null, true));
+
+    return subscription;
   });
 }
 
@@ -100,14 +108,22 @@ export function reduce(iterator, initialValue) {
 }
 
 /**
- * @param {Readable} stream
- * @returns {Readable}
+ * @param {ReadableStream} stream
+ * @returns {ReadableStream}
  */
 export function concat(stream) {
   var self = this;
+  var subscr1, subscr2;
+
   return new ReadableStream(function(onNext, onError, onComplete) {
-    self.subscribe(onNext, onError, function() {
-      stream.subscribe(onNext, onError, onComplete);
+    subscr1 = self.subscribe(onNext, onError, function() {
+      subscr2 = stream.subscribe(onNext, onError, onComplete);
     });
+
+    return function() {
+      subscr1.cancel();
+      if (subscr2)
+        subscr2.cancel();
+    };
   });
 }

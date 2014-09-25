@@ -1,12 +1,19 @@
+import ReadableStream from './constructor';
+
+export function zip(/* ...sources, mapper */) {
+  var args = [].slice.call(arguments);
+  return ReadableStream.zip.apply(ReadableStream, [ this ].concat(args));
+}
+
 /**
- * @returns {Readable}
+ * @returns {ReadableStream}
  */
 export function flatten() {
   var self = this;
   var promises = [];
 
   return new ReadableStream(function(onNext, onError, onComplete) {
-    var subscription = self.subscribe(function(value) {
+    return self.subscribe(function(value) {
       if (value instanceof ReadableStream) {
         value.subscribe(onNext, onError);
         promises.push(value.toPromise());
@@ -19,13 +26,13 @@ export function flatten() {
 }
 
 /**
- * @returns {Readable}
+ * @returns {ReadableStream}
  */
 export function flattenArray() {
   var self = this;
 
   return new ReadableStream(function(onNext, onError, onComplete) {
-    self.subscribe(function(value) {
+    return self.subscribe(function(value) {
       if (Array.isArray(value))
         value.forEach(onNext);
       else
@@ -36,12 +43,12 @@ export function flattenArray() {
 
 /**
  * @param {Number} milliseconds
- * @returns {Readable}
+ * @returns {ReadableStream}
  */
 export function delay(milliseconds) {
   var self = this;
   return new ReadableStream(function(onNext, onError, onComplete) {
-    self.subscribe(function(value) {
+    return self.subscribe(function(value) {
       setTimeout(onNext.bind(null, value), milliseconds);
     }, onError, onComplete)
   });
@@ -49,7 +56,7 @@ export function delay(milliseconds) {
 
 /**
  * @param {Function} modifier
- * @returns {Readable}
+ * @returns {ReadableStream}
  */
 export function unique(modifier) {
   modifier = modifier || function(a) { return a }
@@ -67,7 +74,7 @@ export function unique(modifier) {
 /**
  * @param {Function} modifier
  * @param {Any} initialValue
- * @returns {Readable}
+ * @returns {ReadableStream}
  */
 export function accumulate(iterator, seed) {
   var self = this;
@@ -75,7 +82,7 @@ export function accumulate(iterator, seed) {
   var accumulated = initialValue || null;
 
   return new ReadableStream(function(onNext, onError, onComplete) {
-    self.subscribe(function(value) {
+    return self.subscribe(function(value) {
       accumulated = count === 0 && !accumulated ?
         value :
         iterator(accumulated, value, count++, self);
