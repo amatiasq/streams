@@ -247,7 +247,5 @@ export function merge(Readable, Readable) {
     });
 
     return cancel;
-
-    }
   });
 }
