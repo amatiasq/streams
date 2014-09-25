@@ -1,5 +1,6 @@
 import { isFunction } from '../utils';
 
+/*globals ReadableStream */
 export default function ReadableStream(subscribe) {
   this._subscribe = subscribe;
 }

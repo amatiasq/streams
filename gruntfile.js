@@ -42,7 +42,7 @@ module.exports = function(grunt) {
       js: {
         files: '<%= files.src %>',
         tasks: [
-          //'jshint',
+          'jshint',
           'transpile',
         ],
       },
