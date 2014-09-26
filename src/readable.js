@@ -1,46 +1,46 @@
 // jshint strict:false
 import { extend } from './utils';
-import ReadableStream from 'readable/constructor';
+import ReadableStream from './readable/constructor';
 
-import empty from './readable/static-empty.js';
-import fromArray from './readable/static-from-array.js';
-import fromEvent from './readable/static-from-event.js';
-import fromPromise from './readable/static-from-promise.js';
-import fromStream from './readable/static-from-stream.js';
-import fromWritable from './readable/static-from-writable.js';
-import from from './readable/static-from.js';
-import interval from './readable/static-interval.js';
-import merge from './readable/static-merge.js';
-import noop from './readable/static-noop.js';
-import range from './readable/static-range.js';
-import repeat from './readable/static-repeat.js';
-import single from './readable/static-single.js';
-import _throw from './readable/static-throw.js';
-import zip from './readable/static-zip.js';
+import empty from './readable/static-empty';
+import fromArray from './readable/static-from-array';
+import fromEvent from './readable/static-from-event';
+import fromPromise from './readable/static-from-promise';
+import fromStream from './readable/static-from-stream';
+import fromWritable from './readable/static-from-writable';
+import from from './readable/static-from';
+import interval from './readable/static-interval';
+import merge from './readable/static-merge';
+import noop from './readable/static-noop';
+import range from './readable/static-range';
+import repeat from './readable/static-repeat';
+import staticSingle from './readable/static-single';
+import _throw from './readable/static-throw';
+import staticZip from './readable/static-zip';
 
-import accumulate from './readable/accumulate.js';
-import concat from './readable/concat.js';
-import delay from './readable/delay.js';
-import every from './readable/every.js';
-import filter from './readable/filter.js';
-import first from './readable/first.js';
-import flatten from './readable/flatten.js';
-import flattenArray from './readable/flatten-array.js';
-import forEach from './readable/for-each.js';
-import last from './readable/last.js';
-import map from './readable/map.js';
-import reduce from './readable/reduce.js';
-import single from './readable/single.js';
-import skip from './readable/skip.js';
-import skipUntil from './readable/skip-until.js';
-import some from './readable/some.js';
-import take from './readable/take.js';
-import takeUntil from './readable/take-until.js';
-import toArray from './readable/to-array.js';
-import toPromise from './readable/to-promise.js';
-import unique from './readable/unique.js';
-import until from './readable/until.js';
-import zip from './readable/zip.js';
+import accumulate from './readable/accumulate';
+import concat from './readable/concat';
+import delay from './readable/delay';
+import every from './readable/every';
+import filter from './readable/filter';
+import first from './readable/first';
+import flatten from './readable/flatten';
+import flattenArray from './readable/flatten-array';
+import forEach from './readable/for-each';
+import last from './readable/last';
+import map from './readable/map';
+import reduce from './readable/reduce';
+import single from './readable/single';
+import skip from './readable/skip';
+import skipUntil from './readable/skip-until';
+import some from './readable/some';
+import take from './readable/take';
+import takeUntil from './readable/take-until';
+import toArray from './readable/to-array';
+import toPromise from './readable/to-promise';
+import unique from './readable/unique';
+import until from './readable/until';
+import zip from './readable/zip';
 
 extend(ReadableStream, {
   empty: empty,
@@ -55,9 +55,9 @@ extend(ReadableStream, {
   noop: noop,
   range: range,
   repeat: repeat,
-  single: single,
+  single: staticSingle,
   throw: _throw,
-  zip: zip,
+  zip: staticZip,
 });
 
 extend(ReadableStream.prototype, {

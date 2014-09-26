@@ -16,18 +16,25 @@ module.exports = function(grunt) {
     transpile: {
       cjs: {
         type: 'cjs',
-        expand: true,
         cwd: 'src/',
         src: '**/*.js',
+        expand: true,
         dest: 'dist/cjs/',
       },
       amd: {
         type: 'amd',
-        expand: true,
         cwd: 'src/',
         src: '**/*.js',
+        expand: true,
         dest: 'dist/amd/',
       },
+      globals: {
+        type: 'globals',
+        cwd: 'src/',
+        src: 'readable.js',
+        expand: true,
+        dest: 'dist/globals/',
+      }
     },
 
     jshint: {
