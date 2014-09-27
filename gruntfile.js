@@ -8,6 +8,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-es6-module-transpiler');
 
 
@@ -30,6 +31,7 @@ module.exports = function(grunt) {
     clean: {
       build: 'dist',
       doc: 'doc',
+      map: 'dist/stream.js.map',
     },
 
     transpile: {
@@ -60,6 +62,13 @@ module.exports = function(grunt) {
         src: '**/*.js',
         expand: true,
         dest: 'dist/amd/test/',
+      },
+    },
+
+    uglify: {
+      single: {
+        src: 'dist/stream.js',
+        dest: 'dist/stream.min.js',
       },
     },
 
@@ -121,14 +130,25 @@ module.exports = function(grunt) {
     'lint',
     'build',
     'transpile:cjs-test',
-    //'transpile:amd-test',
+    'transpile:amd-test',
     'mochaTest',
   ]);
 
+  grunt.registerTask('transpile-single', function() {
+    var done = this.async();
+    grunt.util.spawn({
+      cmd: 'node_modules/.bin/compile-modules',
+      args: [ 'convert', '-o', 'dist/stream.js', 'adapter/single.js' ],
+    }, done)
+  });
+
   grunt.registerTask('build', [
     'clean:build',
+    'transpile-single',
+    'clean:map',
+    'uglify:single',
     'transpile:cjs',
-    //'transpile:amd',
+    'transpile:amd',
   ]);
 
   grunt.registerTask('default', [
