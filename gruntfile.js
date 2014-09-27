@@ -89,8 +89,6 @@ module.exports = function(grunt) {
     },
   });
 
-  console.log(grunt.file.expand('<%= files.cjs.test %>'));
-
   grunt.registerTask('lint', [ 'jshint' ]);
   grunt.registerTask('test', [
     'lint',
