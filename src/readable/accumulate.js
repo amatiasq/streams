@@ -1,6 +1,8 @@
 import ReadableStream from './constructor';
 
 /**
+ * {@link http://jsfiddle.net/amatiasq/uxzc91vm/}
+ *
  * @param {Function} modifier
  * @param {Any} initialValue
  * @returns {ReadableStream}
