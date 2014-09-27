@@ -14,13 +14,14 @@
     "grunt-es6-module-transpiler": "^0.6.0"
   },
   "devDependencies": {
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-mocha-test": "^0.12.0",
     "mocha": "^1.21.4",
     "sinon": "^1.10.3"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "node_modules/.bin/grunt test"
   },
   "repository": {
     "type": "git",
