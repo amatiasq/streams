@@ -2,6 +2,8 @@
 
 module.exports = function(grunt) {
   'use strict';
+  grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-jsdoc-to-markdown');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -27,6 +29,7 @@ module.exports = function(grunt) {
 
     clean: {
       build: 'dist',
+      doc: 'doc',
     },
 
     transpile: {
@@ -71,11 +74,27 @@ module.exports = function(grunt) {
 
     jshint: {
       options: {
-        jshintignore: ".jshintignore",
-        jshintrc: ".jshintrc"
+        jshintignore: '.jshintignore',
+        jshintrc: '.jshintrc',
       },
       src: [ '<%= files.src %>' ],
       test: [ '<%= files.test %>' ],
+    },
+
+    jsdoc: {
+      options: { destination: 'doc' },
+      cjs: { src: '<%= files.cjs.src %>' },
+      'cjs-test': { src: '<%= files.cjs.test %>' },
+    },
+
+    jsdoc2md: {
+      options: {
+        //index: true
+      },
+      all: {
+        src: '<%= files.cjs.src %>',
+        dest: 'doc/README.md',
+      },
     },
 
     watch: {
@@ -84,23 +103,36 @@ module.exports = function(grunt) {
           '<%= files.src %>',
           '<%= files.test %>',
         ],
-        tasks: [ 'test' ],
+        tasks: [ 'default' ],
       },
     },
   });
 
   grunt.registerTask('lint', [ 'jshint' ]);
+
+  grunt.registerTask('doc', [
+    'clean:doc',
+    'transpile:cjs',
+    'jsdoc2md',
+    'jsdoc:cjs',
+  ]);
+
   grunt.registerTask('test', [
     'lint',
     'build',
     'transpile:cjs-test',
-    'transpile:amd-test',
+    //'transpile:amd-test',
     'mochaTest',
   ]);
+
   grunt.registerTask('build', [
-    'clean',
+    'clean:build',
     'transpile:cjs',
-    'transpile:amd',
+    //'transpile:amd',
   ]);
-  grunt.registerTask('default', [ 'watch' ]);
+
+  grunt.registerTask('default', [
+    'test',
+    'doc',
+  ]);
 };
