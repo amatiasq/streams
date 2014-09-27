@@ -50,4 +50,14 @@ ReadableStream.prototype.subscribe = function(onNext, onError, onComplete) {
   return { cancel: cancel };
 };
 
+ReadableStream.prototype.log = function(prefix) {
+  prefix = prefix || '[STREAM-LOGGER]';
+  var log = console.log.bind(console, prefix);
+  return this.subscribe(
+    log.bind(null, '[value]'),
+    log.bind(null, '[error]'),
+    log.bind(null, '[completed]')
+  );
+};
+
 export default ReadableStream;
