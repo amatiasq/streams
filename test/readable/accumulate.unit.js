@@ -1,0 +1,5 @@
+
+describe('ReadableStream#accumulate', function() {
+
+
+});

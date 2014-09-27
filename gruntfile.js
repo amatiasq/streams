@@ -2,6 +2,8 @@
 
 module.exports = function(grunt) {
   'use strict';
+  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-es6-module-transpiler');
@@ -11,6 +13,20 @@ module.exports = function(grunt) {
 
     files: {
       src: 'src/**/*.js',
+      test: 'test/**/*.js',
+
+      amd: {
+        src: 'dist/amd/src/**/*.js',
+        test: 'dist/amd/test/**/*.js',
+      },
+      cjs: {
+        src: 'dist/cjs/src/**/*.js',
+        test: 'dist/cjs/test/**/*.js',
+      }
+    },
+
+    clean: {
+      build: 'dist',
     },
 
     transpile: {
@@ -19,21 +35,37 @@ module.exports = function(grunt) {
         cwd: 'src/',
         src: '**/*.js',
         expand: true,
-        dest: 'dist/cjs/',
+        dest: 'dist/cjs/src/',
+      },
+      'cjs-test': {
+        type: 'cjs',
+        cwd: 'test/',
+        src: '**/*.js',
+        expand: true,
+        dest: 'dist/cjs/test/',
       },
       amd: {
         type: 'amd',
         cwd: 'src/',
         src: '**/*.js',
         expand: true,
-        dest: 'dist/amd/',
+        dest: 'dist/amd/src/',
       },
-      globals: {
-        type: 'globals',
-        cwd: 'src/',
-        src: 'readable.js',
+      'amd-test': {
+        type: 'amd',
+        cwd: 'test/',
+        src: '**/*.js',
         expand: true,
-        dest: 'dist/globals/',
+        dest: 'dist/amd/test/',
+      },
+    },
+
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: [ '<%= files.cjs.test %>' ],
       }
     },
 
@@ -43,19 +75,34 @@ module.exports = function(grunt) {
         jshintrc: ".jshintrc"
       },
       src: [ '<%= files.src %>' ],
+      test: [ '<%= files.test %>' ],
     },
 
     watch: {
       js: {
-        files: '<%= files.src %>',
-        tasks: [
-          'jshint',
-          'transpile',
+        files: [
+          '<%= files.src %>',
+          '<%= files.test %>',
         ],
+        tasks: [ 'test' ],
       },
     },
   });
 
+  console.log(grunt.file.expand('<%= files.cjs.test %>'));
 
+  grunt.registerTask('lint', [ 'jshint' ]);
+  grunt.registerTask('test', [
+    'lint',
+    'build',
+    'transpile:cjs-test',
+    'transpile:amd-test',
+    'mochaTest',
+  ]);
+  grunt.registerTask('build', [
+    'clean',
+    'transpile:cjs',
+    'transpile:amd',
+  ]);
   grunt.registerTask('default', [ 'watch' ]);
 };

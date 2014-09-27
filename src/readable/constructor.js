@@ -1,7 +1,7 @@
 import { isFunction } from '../utils';
 
 /*globals ReadableStream */
-export default function ReadableStream(subscribe) {
+function ReadableStream(subscribe) {
   this._subscribe = subscribe;
 }
 
@@ -17,3 +17,5 @@ ReadableStream.prototype.subscribe = function(onNext, onError, onComplete) {
 
   return { cancel: cancel };
 };
+
+export default ReadableStream;
