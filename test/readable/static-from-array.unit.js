@@ -64,9 +64,7 @@ describe('ReadableStream.fromArray', function() {
       });
     });
 
-    // deferred until ReadableStream.interval is tested
-    /*globals xdescribe*/
-    xdescribe('and the scheduler is flushed as many times as items are in the array', function() {
+    describe('and the scheduler is flushed as many times as items are in the array', function() {
       it('should invoke onNext function that many times and invoke onComplete with the last item', function() {
         scheduler.flush();
         assert(onNext.called, 'No value was received');

@@ -12,11 +12,14 @@ export default function fromArray(array, scheduler) {
   var flow = interval(scheduler);
 
   return new ReadableStream(function(onNext, onError, onComplete) {
-    var subscription = flow.subscribe(function(index) {
-      if (index < array.length)
-        onNext(array[index]);
+    if (!array.length) {
+      scheduler(onComplete);
+      return;
+    }
 
-      if (index === array.length)
+    var subscription = flow.subscribe(function(index) {
+      onNext(array[index]);
+      if (index + 1 === array.length)
         end();
     }, onError, onComplete);
 
