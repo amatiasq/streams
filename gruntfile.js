@@ -130,7 +130,7 @@ module.exports = function(grunt) {
     'lint',
     'build',
     'transpile:cjs-test',
-    'transpile:amd-test',
+    //'transpile:amd-test',
     'mochaTest',
   ]);
 
@@ -142,13 +142,17 @@ module.exports = function(grunt) {
     }, done)
   });
 
-  grunt.registerTask('build', [
-    'clean:build',
+  grunt.registerTask('build-single', [
     'transpile-single',
     'clean:map',
     'uglify:single',
+  ]);
+
+  grunt.registerTask('build', [
+    'clean:build',
+    //'build-single',
     'transpile:cjs',
-    'transpile:amd',
+    //'transpile:amd',
   ]);
 
   grunt.registerTask('default', [

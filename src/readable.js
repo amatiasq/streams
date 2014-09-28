@@ -34,6 +34,7 @@ import single from './readable/single';
 import skip from './readable/skip';
 import skipUntil from './readable/skip-until';
 import some from './readable/some';
+import subscribe from './readable/subscribe';
 import take from './readable/take';
 import takeUntil from './readable/take-until';
 import toArray from './readable/to-array';
@@ -77,6 +78,7 @@ extend(ReadableStream.prototype, {
   skip: skip,
   skipUntil: skipUntil,
   some: some,
+  subscribe: subscribe,
   take: take,
   takeUntil: takeUntil,
   toArray: toArray,
