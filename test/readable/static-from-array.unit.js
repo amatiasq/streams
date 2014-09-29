@@ -1,13 +1,7 @@
-//jshint unused:false
-
 import ReadableStream from '../../src/readable';
 import TestScheduler from '../test-scheduler';
 import { ok as assert } from 'assert';
 import { spy as createSpy } from 'sinon';
-import {
-  object as isObject,
-  fn as isFunction
-} from 'is';
 
 describe('ReadableStream.fromArray', function() {
   var onNext, onError, onComplete, scheduler;
