@@ -150,7 +150,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'clean:build',
-    //'build-single',
+    'build-single',
     'transpile:cjs',
     //'transpile:amd',
   ]);
