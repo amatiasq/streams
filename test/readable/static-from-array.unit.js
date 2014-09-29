@@ -70,5 +70,14 @@ describe('ReadableStream.fromArray', function() {
         assert(onComplete.called, 'Stream was not completed');
       });
     });
+
+    describe('and the scheduler is flushed more times than items are in the array', function() {
+      it('should invoke onNext as many times as items are in the array', function() {
+        for (var i = values.length + 1; i--; )
+          scheduler.flush();
+
+        assert(onNext.callCount === values.length, 'It was called more times');
+      });
+    });
   });
 });

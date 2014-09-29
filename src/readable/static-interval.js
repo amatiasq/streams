@@ -28,8 +28,8 @@ export default function interval(scheduler, fn) {
   return new ReadableStream(function(onNext) {
     function scheduleNext() {
       timeout = scheduler(function() {
-        onNext(fn(count++));
         scheduleNext();
+        onNext(fn(count++));
       });
     }
 
