@@ -22,7 +22,6 @@ describe('ReadableStream.fromArray', function() {
 
     describe('and scheduler is not fired', function() {
       it('should not invoke any callback', function() {
-
         assert(!onNext.called, 'Some value was received');
         assert(!onError.called, 'A error was received');
         assert(!onComplete.called, 'Stream was completed');
