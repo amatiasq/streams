@@ -45,6 +45,6 @@ export default ReadableStream;
  *   error is produced.
  * @param onComplete {ReadableStream~onComplete} This callback must be invoked
  *   as soon as we know this stream will not send more values in the future.
- * @returns {?Subscription|Function} A subscription object or a function to
+ * @returns {Subscription|Function|null} A subscription object or a function to
  *   cancel the subscription.
  */

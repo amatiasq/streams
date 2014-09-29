@@ -6,7 +6,7 @@ import ReadableStream from './constructor';
  *   promise is rejected the stream will send and error.
  *
  * @method ReadableStream.fromPromise
- * @params promise {Promise} The promise to listen.
+ * @param promise {Promise} The promise to listen.
  * @returns {ReadableStream} A steam with only one value.
  */
 export default function fromPromise(promise) {

@@ -14,7 +14,7 @@ import { immediate } from '../schedulers';
  *
  * @param [scheduler=Scheduler.immediate] {Scheduler} A scheduler to schedule
  *   values streaming. Defaults to {@link Schedulers.immediate}.
- * @param valueGenerator {Function} A function to generate the values to be
+ * @param [valueGenerator] {Function} A function to generate the values to be
  *   sent.
  * @returns {ReadableStream} A stream that will emit a value returned by
  *   `valueGenerator` each time `scheduler` fires.

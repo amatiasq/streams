@@ -6,7 +6,14 @@ import interval from './static-interval';
  *   when someone subscribes to it. Stream flow can be defined using a
  *   {@link Scheduler} function.
  *
- * @returns {ReadableStream}
+ * @method ReadableStream.fromArray
+ * @todo Improve `scheduler` description
+ * @param array {Array} Any array-like object (must have `.lenght` and index
+ *   accessors).
+ * @param [scheduler=Scheduler.immediate] {Scheduler} The scheduler to schedule
+ *   the items streaming.
+ * @returns {ReadableStream} A stream that will emit the array values at the
+ *   rithm of `scheduler`.
  */
 export default function fromArray(array, scheduler) {
   var flow = interval(scheduler);

@@ -5,11 +5,11 @@ import Subscription from '../subscription';
  *   argument passed to {@link ReadableStream#constructor}.
  *
  * @method ReadableStream#subscribe
- * @param onNext {ReadableStream~onNext} Callback to invoke when the stream has
+ * @param [onNext] {ReadableStream~onNext} Callback to invoke when the stream has
  *   a new value. The value will be passed as argument.
- * @param onError {ReadableStream~onError} Callback to be invoked if the streams
+ * @param [onError] {ReadableStream~onError} Callback to be invoked if the streams
  *   fails. The error object will be passed as argument.
- * @param onComplete {ReadableStream~onComplete} Callback to be invoked when the
+ * @param [onComplete] {ReadableStream~onComplete} Callback to be invoked when the
  *   stream has finished sending values. No arguments.
  * @returns {Subscription} A subscription object to cancel the streamming.
  */
