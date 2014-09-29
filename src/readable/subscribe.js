@@ -4,6 +4,7 @@ import Subscription from '../subscription';
  * Allows you to listen to the stream values. It's implementation depends on
  *   argument passed to {@link ReadableStream#constructor}.
  *
+ * @todo Maybe add example fiddle?
  * @method ReadableStream#subscribe
  * @param [onNext] {ReadableStream~onNext} Callback to invoke when the stream has
  *   a new value. The value will be passed as argument.

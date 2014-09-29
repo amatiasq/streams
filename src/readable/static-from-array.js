@@ -7,7 +7,9 @@ import interval from './static-interval';
  *   {@link Scheduler} function.
  *
  * @method ReadableStream.fromArray
+ * @see {@link http://jsfiddle.net/amatiasq/hL26kwhd/|Fiddle example}
  * @todo Improve `scheduler` description
+ *
  * @param array {Array} Any array-like object (must have `.lenght` and index
  *   accessors).
  * @param [scheduler=Scheduler.immediate] {Scheduler} The scheduler to schedule

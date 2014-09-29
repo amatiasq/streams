@@ -76,7 +76,7 @@ describe('ReadableStream.interval', function() {
   });
 
   describe('with value generator function', function() {
-    function generator(index) { console.log('GENERATOR', index);return values[index] }
+    function generator(index) { return values[index] }
     var values = [ {}, [] ];
     var sut;
     beforeEach(function() {
