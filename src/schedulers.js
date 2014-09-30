@@ -1,7 +1,13 @@
-function immediate(fn) {
-  return setTimeout(fn, 0);
+function delay(ms, fn) {
+  return setTimeout(fn, ms);
 }
-immediate.cancel = function(id) {
+delay.cancel = function(id) {
   clearTimeout(id);
 };
+export { delay };
+
+var immediate = delay.bind(null, 0);
+immediate.cancel = delay.cancel;
 export { immediate };
+
+

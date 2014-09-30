@@ -97,7 +97,6 @@ describe('ReadableStream.interval', function() {
       it('should stream the first two values returned by iterator', function() {
         scheduler.flush();
         scheduler.flush();
-        //console.log(onNext.withArgs(values[1]));
         assert(onNext.called, 'No value was passed');
         assert(!onNext.calledOnce, 'Only one value was passed');
         assert(onNext.calledTwice, 'More than two values were passed');

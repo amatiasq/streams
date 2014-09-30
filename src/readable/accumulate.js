@@ -1,7 +1,12 @@
 import ReadableStream from './constructor';
 
 /**
- * {@link http://jsfiddle.net/amatiasq/uxzc91vm/}
+ * This behaves similar to {@link ReadableStream#reduce} but instead of a
+ *   promise this one returns a stream. With every new value a partial total
+ *   will be sent over the new stream. Watch the example for more information.
+ *
+ * @method ReadableStream#accumulate
+ * @see {@link http://jsfiddle.net/amatiasq/uxzc91vm/|Fiddle example}
  *
  * @param {Function} modifier
  * @param {Any} initialValue
