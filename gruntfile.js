@@ -91,15 +91,21 @@ module.exports = function(grunt) {
     },
 
     jsdoc: {
-      options: { destination: 'doc' },
+      options: {
+        destination: 'doc',
+        template: './node_modules/ink-docstrap/template',
+        configure: 'jsdoc.conf.json',
+        // Nice themes:
+        //   cerulean (clean)
+        //   slate (dark gray)
+        //   spruce (green)
+        //   superhero (dark orange)
+      },
       cjs: { src: '<%= files.cjs.src %>' },
       'cjs-test': { src: '<%= files.cjs.test %>' },
     },
 
     jsdoc2md: {
-      options: {
-        //index: true
-      },
       all: {
         src: '<%= files.cjs.src %>',
         dest: 'doc/README.md',
