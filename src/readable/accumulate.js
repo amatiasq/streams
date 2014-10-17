@@ -8,8 +8,8 @@ import ReadableStream from './constructor';
  * @method ReadableStream#accumulate
  * @see {@link http://jsfiddle.net/amatiasq/uxzc91vm/|Fiddle example}
  *
- * @param {Function} modifier
- * @param {Any} initialValue
+ * @param accumulator {Function}
+ * @param initialValue {*}
  * @returns {ReadableStream}
  */
 export default function accumulate(iterator, initialValue) {
@@ -21,8 +21,10 @@ export default function accumulate(iterator, initialValue) {
     return self.subscribe(function(value) {
       accumulated = count === 0 && !accumulated ?
         value :
-        iterator(accumulated, value, count++, self);
+        iterator(accumulated, value, count, self);
+
       onNext(accumulated);
+      count++;
     }, onError, onComplete);
   });
 }

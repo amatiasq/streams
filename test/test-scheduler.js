@@ -19,8 +19,14 @@ function TestScheduler() {
     _queue.forEach(function(fn) { fn() });
   }
 
+  function flushAll() {
+    while (queue.length)
+      flush();
+  }
+
   schedule.cancel = cancel;
   schedule.flush = flush;
+  schedule.flushAll = flushAll;
   return schedule;
 }
 
