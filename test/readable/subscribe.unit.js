@@ -1,7 +1,7 @@
 import Subscription from '../../src/subscription';
 import ReadableStream from '../../src/readable';
-import { ok as assert } from 'assert';
-import { spy as createSpy } from 'sinon';
+import { ok as assert } from 'assert';
+import { spy as createSpy } from 'sinon';
 import {
   object as isObject,
   fn as isFunction

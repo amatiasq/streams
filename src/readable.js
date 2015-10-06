@@ -1,5 +1,4 @@
 // jshint strict:false
-import { extend } from './utils';
 import ReadableStream from './readable/constructor';
 
 import empty from './readable/static-empty';
@@ -43,49 +42,49 @@ import unique from './readable/unique';
 import until from './readable/until';
 import zip from './readable/zip';
 
-extend(ReadableStream, {
-  empty: empty,
-  fromArray: fromArray,
-  fromEvent: fromEvent,
-  fromPromise: fromPromise,
-  fromStream: fromStream,
-  fromWritable: fromWritable,
-  from: from,
-  interval: interval,
-  merge: merge,
-  noop: noop,
-  range: range,
-  repeat: repeat,
+export default ReadableStream;
+
+Object.assign(ReadableStream, {
+  empty,
+  fromArray,
+  fromEvent,
+  fromPromise,
+  fromStream,
+  fromWritable,
+  from,
+  interval,
+  merge,
+  noop,
+  range,
+  repeat,
   single: staticSingle,
   throw: _throw,
   zip: staticZip,
 });
 
-extend(ReadableStream.prototype, {
-  accumulate: accumulate,
-  concat: concat,
-  delay: delay,
-  every: every,
-  filter: filter,
-  first: first,
-  flatten: flatten,
-  flattenArray: flattenArray,
-  forEach: forEach,
-  last: last,
-  map: map,
-  reduce: reduce,
-  single: single,
-  skip: skip,
-  skipUntil: skipUntil,
-  some: some,
-  subscribe: subscribe,
-  take: take,
-  takeUntil: takeUntil,
-  toArray: toArray,
-  toPromise: toPromise,
-  unique: unique,
-  until: until,
-  zip: zip,
+Object.assign(ReadableStream.prototype, {
+  accumulate,
+  concat,
+  delay,
+  every,
+  filter,
+  first,
+  flatten,
+  flattenArray,
+  forEach,
+  last,
+  map,
+  reduce,
+  single,
+  skip,
+  skipUntil,
+  some,
+  subscribe,
+  take,
+  takeUntil,
+  toArray,
+  toPromise,
+  unique,
+  until,
+  zip,
 });
-
-export default ReadableStream;

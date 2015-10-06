@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Mocha Tests</title>
+    <link href="node_modules/mocha/mocha.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/mocha/mocha.js"></script>
+    <script>
+      mocha.setup('bdd');
+
+      System.config({
+        transpiler: 'babel',
+        defaultJSExtensions: true,
+        babelOptions: {
+          optional: [ 'runtime' ],
+        },
+
+        paths: {
+          'npm:*': 'node_modules/*',
+          'bower:*': 'bower_components/*',
+          // 'json': '/config/loaders/json',
+          'npm:babel-runtime/regenerator': 'node_modules/babel-runtime/regenerator/index',
+          'npm:core-js/library/fn/symbol': 'node_modules/core-js/library/fn/symbol/index',
+        },
+
+        map: {
+          'core-js': 'npm:core-js',
+          babel: 'npm:babel-core/browser',
+          'babel-runtime': 'npm:babel-runtime',
+          assert: 'npm:assert/assert',
+          util: 'npm:assert/node_modules/util/util',
+          inherits: 'npm:assert/node_modules/util/node_modules/inherits/inherits_browser',
+          sinon: 'npm:sinon/lib/sinon',
+          is: 'npm:is/index',
+        },
+      });
+
+      System.import('test/test').then(function() {
+        mocha.checkLeaks();
+        mocha.globals([ 'System' ]);
+        mocha.run();
+      });
+    </script>
+  </body>
+</html>

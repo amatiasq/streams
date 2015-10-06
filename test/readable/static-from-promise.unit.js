@@ -1,10 +1,7 @@
-//jshint unused:false
-/*global xdescribe*/
-
 import ReadableStream from '../../src/readable';
 import FakePromise from '../fake-promise';
-import { ok as assert } from 'assert';
-import { spy as createSpy } from 'sinon';
+import { ok as assert } from 'assert';
+import { spy as createSpy } from 'sinon';
 
 describe('ReadableStream.fromPromise', function() {
   var onNext, onError, onComplete, promise, sut;
