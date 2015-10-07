@@ -4,14 +4,14 @@ import ReadableStream from './constructor';
  * @returns {ReadableStream}
  */
 export default function flattenArray() {
-  var self = this;
+  return new ReadableStream((push, fail, complete) => {
+    return this.subscribe(onNext, fail, complete);
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return self.subscribe(function(value) {
+    function onNext(value) {
       if (Array.isArray(value))
-        value.forEach(onNext);
+        value.forEach(push);
       else
-        onNext(value);
-    }, onError, onComplete);
+        push(value);
+    }
   });
 }

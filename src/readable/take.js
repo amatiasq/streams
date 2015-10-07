@@ -1,4 +1,5 @@
 import ReadableStream from './constructor';
+import empty from './static-empty';
 
 /**
  * Returns a stream which will stream the first N items of this stream.
@@ -8,22 +9,22 @@ import ReadableStream from './constructor';
  * @returns {ReadableStream<T>}
  */
 export default function take(count) {
-  var self = this;
-  var remaining = count;
+  if (count <= 0)
+    return empty();
 
-  //if (remaining <= 0)
-  //  return ReadableStream.empty();
-
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    var subscription = self.subscribe(function(value) {
-      onNext(value);
-      remaining--;
-      if (remaining === 0) {
-        subscription.cancel();
-        onComplete();
-      }
-    }, onError, onComplete);
-
+  return new ReadableStream((push, fail, complete) => {
+    var remaining = count;
+    var subscription = this.subscribe(onNext, fail, complete);
     return subscription;
+
+    function onNext(value) {
+      push(value);
+      remaining--;
+
+      if (remaining <= 0) {
+        subscription.cancel();
+        complete();
+      }
+    }
   });
 }

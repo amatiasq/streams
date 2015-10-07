@@ -42,7 +42,7 @@ describe('ReadableStream#subscribe', function() {
     describe('when .cancel invoked', function() {
       describe('if value returned by callback was a function', function() {
         it('should invoke the function returned by the callback we passed to the constructor', function() {
-          var sut = new ReadableStream(function() { return spy });
+          var sut = new ReadableStream(() => spy);
           var subscription = sut.subscribe(onNext, onError, onComplete);
           assert(!spy.called, 'Function was invoked before .cancel was called');
           subscription.cancel();
@@ -54,7 +54,7 @@ describe('ReadableStream#subscribe', function() {
       describe('if value returned by callback was a subscription object', function() {
         it('should invoke the function returned by the callback we passed to the constructor', function() {
           var fakeSubscription = new Subscription(spy);
-          var sut = new ReadableStream(function() { return fakeSubscription });
+          var sut = new ReadableStream(() => fakeSubscription);
           var subscription = sut.subscribe(onNext, onError, onComplete);
           assert(!spy.called, 'Subscription was cancelled before .cancel was called');
           subscription.cancel();

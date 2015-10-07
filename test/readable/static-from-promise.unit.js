@@ -25,9 +25,7 @@ describe('ReadableStream.fromPromise', function() {
 
   describe('when invoked with rejected promise', function() {
     var error = {};
-    beforeEach(function() {
-      promise.reject(error);
-    });
+    beforeEach(() => promise.reject(error));
 
     it('should send an error', function() {
       assert(!onNext.called, 'Some value was received');
@@ -43,17 +41,10 @@ describe('ReadableStream.fromPromise', function() {
 
   describe('when invoked with a resolved promise', function() {
     var value = {};
-    beforeEach(function() {
-      promise.resolve(value);
-    });
+    beforeEach(() => promise.resolve(value));
 
-    it('should not send any error', function() {
-      assert(!onError.called, 'An error was received');
-    });
-
-    it('should complete the stream.', function() {
-      assert(onComplete.called, 'Stream was not completed');
-    });
+    it('should not send any error', () => assert(!onError.called, 'An error was received'));
+    it('should complete the stream.', () => assert(onComplete.called, 'Stream was not completed'));
 
     it('should stream the promise\'s value', function() {
       assert(onNext.called, 'No value was received');

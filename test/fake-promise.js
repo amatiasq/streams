@@ -1,27 +1,17 @@
+export default class FakePromise {
+  constructor() {
+    this.queue = [];
+  }
 
-function FakePromise() {
-  this.queue = [];
+  then(resolve, reject) {
+    this.queue.push({ resolve, reject });
+  }
+
+  resolve(value) {
+    this.queue.forEach(({ resolve }) => resolve && resolve(value));
+  }
+
+  reject(reason) {
+    this.queue.forEach(({ reject }) => reject && reject(reason));
+  }
 }
-
-FakePromise.prototype.then = function(onSuccess, onError) {
-  this.queue.push([ onSuccess, onError ]);
-};
-
-FakePromise.prototype.invoke = function(index, arg) {
-  var queue = this.queue;
-  this.queue = [];
-  queue
-    .map(function(a) { return a[index] })
-    .filter(Boolean)
-    .forEach(function(fn) { fn(arg) });
-};
-
-FakePromise.prototype.resolve = function(value) {
-  this.invoke(0, value);
-};
-
-FakePromise.prototype.reject = function(reason) {
-  this.invoke(1, reason);
-};
-
-export default FakePromise;

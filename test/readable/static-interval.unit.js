@@ -76,11 +76,10 @@ describe('ReadableStream.interval', function() {
   });
 
   describe('with value generator function', function() {
-    function generator(index) { return values[index] }
-    var values = [ {}, [] ];
+    var values = [{}, []];
     var sut;
     beforeEach(function() {
-      sut = ReadableStream.interval(scheduler, generator);
+      sut = ReadableStream.interval(scheduler, index => values[index]);
       sut.subscribe(onNext, onError, onComplete);
     });
 

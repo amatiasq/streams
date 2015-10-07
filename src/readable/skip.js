@@ -7,15 +7,15 @@ import ReadableStream from './constructor';
  * @returns {ReadableStream<T>}
  */
 export default function skip(count) {
-  var self = this;
-  var remaining = count;
+  return new ReadableStream((push, fail, complete) => {
+    var remaining = count;
+    return this.subscribe(onNext, fail, complete);
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return self.subscribe(function(value) {
+    function onNext(value) {
       if (remaining > 0)
         remaining--;
       else
-        onNext(value);
-    }, onError, onComplete);
+        push(value);
+    }
   });
 }

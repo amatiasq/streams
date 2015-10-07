@@ -22,50 +22,49 @@ import { isPromise } from '../utils';
  */
 export default function skipUntil(value, context) {
   if (typeof value === 'function')
-    return skipUntil_function(this, value, context);
+    return skipUntil_function.call(this, value, context);
+
   if (isPromise(value))
-    return skipUntil_promise(this, value);
-  return skipUntil_stream(this, value);
+    return skipUntil_promise.call(this, value);
+
+  return skipUntil_stream.call(this, value);
 }
 
-function skipUntil_function(self, test, context) {
-  var enabled = false;
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return self.subscribe(function(value) {
+function skipUntil_function(test, context) {
+  return new ReadableStream((push, fail, complete) => {
+    var enabled = false;
+    return this.subscribe(onNext, fail, complete);
+
+    function onNext(value) {
       if (!enabled && test.call(context, value))
         enabled = true;
 
       if (enabled)
         onNext(value);
-    }, onError, onComplete);
+    }
   });
 }
 
-function skipUntil_promise(self, promise) {
-  return new ReadableStream(function(onNext, onError, onComplete) {
+
+function skipUntil_promise(promise) {
+  return new ReadableStream((push, fail, complete) => {
     var subscription;
-    promise.then(function() {
-      subscription = self.subscribe(onNext, onError, onComplete);
-    }, onError);
-
-    return function() {
-      subscription.cancel();
-    };
+    promise.then(() => subscription = self.subscribe(push, fail, complete), fail);
+    return () => subscription.cancel();
   });
 }
 
-function skipUntil_stream(self, stream) {
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    var subscription = stream.subscribe(start, onError, start);
+
+function skipUntil_stream(stream) {
+  return new ReadableStream((push, fail, complete) => {
+    var subscription = stream.subscribe(start.bind(this), fail, start.bind(this));
 
     function start() {
       subscription.cancel();
-      subscription = self.subscribe(onNext, onError, onComplete);
+      subscription = this.subscribe(push, fail, complete);
     }
 
-    return function() {
-      subscription.cancel();
-    };
+    return () => subscription.cancel();
   });
 }

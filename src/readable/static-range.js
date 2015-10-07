@@ -1,31 +1,30 @@
 import ReadableStream from './constructor';
+import { ImmediateScheduler } from '../schedulers';
 
 /**
  * @returns {ReadableStream}
  */
-export default function range(start, end) {
-  if (arguments.length === 1) {
-    end = start;
-    start = 0;
-  }
+export default function range(
+  start,
+  end,
+  step = start < end ? 1 : -1,
+  scheduler = new ImmediateScheduler()
+) {
 
-  var timeout;
-  var step = start < end ? 1 : -1;
+  return new ReadableStream((push, fail, complete) => {
+    var next = start;
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    function scheduleNext(next) {
-      timeout = setTimeout(function() {
-        onNext(next);
-        if (next !== end)
-          scheduleNext(next + step);
-        else
-          onComplete();
-      });
-    }
+    scheduler.listen(() => {
+      push(next);
+      next = next + step;
 
-    scheduleNext(start);
-    return function() {
-      clearTimeout(timeout);
-    };
+      if (start < end && next > end || start > end && next < end)
+        complete();
+      else
+        scheduler.schedule();
+    });
+
+    scheduler.schedule();
+    return () => scheduler.cancel();
   });
 }

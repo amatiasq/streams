@@ -6,11 +6,12 @@ import ReadableStream from './constructor';
  * @returns {ReadableStream}
  */
 export default function map(iterator, context) {
-  var self = this;
-  var count = 0;
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return self.subscribe(function(value) {
-      onNext(iterator.call(context, value, count++, self));
-    }, onError, onComplete);
+  return new ReadableStream((push, fail, complete) => {
+    var count = 0;
+    return this.subscribe(onNext.bind(this), fail, complete);
+
+    function onNext(value) {
+      push(iterator.call(context, value, count++, this));
+    }
   });
 }

@@ -4,18 +4,22 @@ import ReadableStream from './constructor';
  * @returns {ReadableStream}
  */
 export default function flatten() {
-  var self = this;
-  var promises = [];
+  return new ReadableStream((push, fail, complete) => {
+    var promises = [];
+    return this.subscribe(onNext, fail, onComplete);
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return self.subscribe(function(value) {
+    function onNext(value) {
       if (value instanceof ReadableStream) {
-        value.subscribe(onNext, onError);
+        value = value.flatten();
+        value.subscribe(push, fail);
         promises.push(value.toPromise());
-      } else
-        onNext(value);
-    }, onError, function() {
-      Promise.all(promises).then(onComplete);
-    });
+      } else {
+        push(value);
+      }
+    }
+
+    function onComplete() {
+      return Promise.all(promises).then(complete);
+    }
   });
 }

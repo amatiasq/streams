@@ -7,21 +7,21 @@ import ReadableStream from './constructor';
  * @returns {ReadableStream}
  */
 export default function fromEvent(target, event, options) {
-  return new ReadableStream(function(onNext) {
-    function tryMethod(listen, remove) {
-      if (typeof target[listen] !== 'function') {
-        target[listen](event, onNext);
-        return target[remove].bind(target, event, onNext);
-      }
-    }
-
+  return new ReadableStream(push => {
     if (options && options.method)
-      return tryMethod(options.method, options.remove);
+      return tryMethod(options.method, options.unsubscribe);
 
     return (
       tryMethod('on', 'off') ||
       tryMethod('addListener', 'removeListener') ||
       tryMethod('addEventListener', 'removeEventListener')
     );
+
+    function tryMethod(listen, unsubscribe) {
+      if (typeof target[listen] !== 'function') {
+        target[listen](event, push);
+        return () => target[unsubscribe](event, push);
+      }
+    }
   });
 }

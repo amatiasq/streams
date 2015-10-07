@@ -1,7 +1,7 @@
 import ReadableStream from '../../src/readable';
 import TestScheduler from '../test-scheduler';
-import { ok as assert } from 'assert';
-import { spy as createSpy } from 'sinon';
+import { ok as assert } from 'assert';
+import { spy as createSpy } from 'sinon';
 
 describe('ReadableStream.fromArray', function() {
   var onNext, onError, onComplete, scheduler;
@@ -39,7 +39,7 @@ describe('ReadableStream.fromArray', function() {
   });
 
   describe('when invoked with an array with values', function() {
-    var values = [ {}, {} ];
+    var values = [{}, {}];
     var sut;
     beforeEach(function() {
       sut = ReadableStream.fromArray(values, scheduler);
@@ -73,6 +73,7 @@ describe('ReadableStream.fromArray', function() {
 
     describe('and the scheduler is flushed more times than items are in the array', function() {
       it('should invoke onNext as many times as items are in the array', function() {
+        /* eslint space-in-parens:1 */
         for (var i = values.length + 1; i--; )
           scheduler.flush();
 

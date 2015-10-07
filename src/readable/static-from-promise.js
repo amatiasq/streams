@@ -12,10 +12,10 @@ import ReadableStream from './constructor';
  * @returns {ReadableStream} A steam with only one value.
  */
 export default function fromPromise(promise) {
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    promise.then(function(value) {
-      onNext(value);
-      onComplete();
-    }, onError);
+  return new ReadableStream((push, fail, complete) => {
+    promise.then(value => {
+      push(value);
+      complete();
+    }, fail);
   });
 }

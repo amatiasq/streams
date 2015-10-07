@@ -8,21 +8,24 @@ import { NonSingleValueStreamError } from '../errors';
  * @returns {Promise<T>} A promise with the only value of this stream
  */
 export default function single() {
-  var self = this;
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     var valueReceipt = false;
-    var value;
+    var result;
 
-    self.subscribe(function(val) {
+    this.subscribe(onNext, reject, onComplete);
+
+    function onNext(value) {
       if (valueReceipt)
         reject(new NonSingleValueStreamError());
 
       valueReceipt = true;
-      value = val;
-    }, reject, function() {
+      result = value;
+    }
+
+    function onComplete() {
       if (valueReceipt)
-        resolve(value);
+        resolve(result);
       reject(new NonSingleValueStreamError());
-    });
+    }
   });
 }

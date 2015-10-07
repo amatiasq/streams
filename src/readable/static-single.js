@@ -1,14 +1,17 @@
 import ReadableStream from './constructor';
+import { ImmediateScheduler } from '../schedulers';
 
 /**
  * @returns {ReadableStream}
  */
-export default function single(value) {
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    var timeout = setTimeout(function() {
-      onNext(value);
-      onComplete(value);
+export default function single(value, scheduler = new ImmediateScheduler()) {
+  return new ReadableStream((push, fail, complete) => {
+    scheduler.listen(() => {
+      push(value);
+      complete();
     });
-    return clearTimeout.bind(null, timeout);
+
+    scheduler.schedule();
+    return () => scheduler.cancel();
   });
 }

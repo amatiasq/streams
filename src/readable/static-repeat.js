@@ -1,25 +1,22 @@
 import ReadableStream from './constructor';
+import { ImmediateScheduler } from '../schedulers';
 
 /**
  * @returns {ReadableStream}
  */
-export default function repeat(value, count) { // schedule
-  var timeout;
+export default function repeat(value, count, scheduler = new ImmediateScheduler()) {
+  return new ReadableStream((push, fail, complete) => {
+    scheduler.listen(() => {
+      push(value);
+      count--;
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    function scheduleNext() {
-      timeout = setTimeout(function() {
-        onNext(value);
-        count--;
-        if (count)
-          scheduleNext();
-        else
-          onComplete();
-      });
-    }
-    scheduleNext();
-    return function() {
-      clearTimeout(timeout);
-    };
+      if (count)
+        scheduler.schedule();
+      else
+        complete();
+    });
+
+    scheduler.schedule();
+    return () => scheduler.cancel();
   });
 }

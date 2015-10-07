@@ -13,7 +13,7 @@
  *   function will be invoked or the returned subscription will be cancelled.
  *
  * @constructor
- * @param onSubscribe {ReadableStream~onSubscribe} Function to be invoked when
+ * @param onSubscribe {ReadableStream~onSubscribe} Function to be invoked when
  *   someone subscribes to this stream.
  */
 function ReadableStream(onSubscribe) {
@@ -21,13 +21,12 @@ function ReadableStream(onSubscribe) {
 }
 
 // DEBUG ONLY
-ReadableStream.prototype.log = function(prefix) {
-  prefix = prefix || '[STREAM-LOGGER]';
+ReadableStream.prototype.log = function(prefix = '[STREAM-LOGGER]') {
   var log = console.log.bind(console, prefix);
   return this.subscribe(
-    log.bind(null, '[value]'),
-    log.bind(null, '[error]'),
-    log.bind(null, '[completed]')
+    value => log('[value]', value),
+    error => log('[error]', error),
+    () => log('[completed]')
   );
 };
 

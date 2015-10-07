@@ -5,11 +5,12 @@
  *   error or to be resolved when the stream is completed.
  */
 export default function forEach(iterator, context) {
-  var self = this;
-  var count = 0;
-  return new Promise(function(resolve, reject) {
-    self.subscribe(function(value) {
-      iterator.call(context, value, count++, self);
-    }, reject, resolve);
+  return new Promise((resolve, reject) => {
+    var count = 0;
+    this.subscribe(onNext.bind(this), reject, resolve);
+
+    function onNext(value) {
+      iterator.call(context, value, count++, this);
+    }
   });
 }

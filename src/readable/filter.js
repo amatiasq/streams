@@ -6,12 +6,13 @@ import ReadableStream from './constructor';
  * @returns {ReadableStream}
  */
 export default function filter(test, context) {
-  var self = this;
-  var count = 0;
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return self.subscribe(function(value) {
-      if (test.call(context, value, count++, self))
-        onNext(value);
-    }, onError, onComplete);
+  return new ReadableStream((push, fail, complete) => {
+    var count = 0;
+    return this.subscribe(onNext.bind(this), fail, complete);
+
+    function onNext(value) {
+      if (test.call(context, value, count++, this))
+        push(value);
+    }
   });
 }

@@ -15,9 +15,7 @@ describe('ReadableStream#accumulate', function() {
 
   describe('when invoked without initial value', function() {
     var sut;
-    beforeEach(function() {
-      sut = ReadableStream.fromArray([ 1, 2, 3 ], scheduler);
-    });
+    beforeEach(() => sut = ReadableStream.fromArray([ 1, 2, 3 ], scheduler));
 
     describe('and not initial value is provided', function() {
       it('it should invoke accumulator with 2 first values', function() {

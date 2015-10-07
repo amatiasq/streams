@@ -1,6 +1,5 @@
 import staticZip from './static-zip';
 
-export default function zip(/* ...sources, mapper */) {
-  var args = [].slice.call(arguments);
-  return staticZip.apply(null, [ this ].concat(args));
+export default function zip(mapper, ...sources) {
+  return staticZip(mapper, this, ...sources);
 }

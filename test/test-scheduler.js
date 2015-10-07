@@ -1,33 +1,26 @@
+import { BaseScheduler } from '../src/schedulers';
 
-function TestScheduler() {
-  var queue = [];
-
-  function schedule(fn) {
-    queue.push(fn);
-    return fn;
+export default class TestScheduler extends BaseScheduler {
+  constructor() {
+    super();
+    this.scheduled = false;
   }
 
-  function cancel(fn) {
-    var index = queue.indexOf(fn);
-    if (index === -1) return;
-    queue.splice(index, 1);
+  schedule() {
+    this.scheduled = true;
   }
 
-  function flush() {
-    var _queue = queue;
-    queue = [];
-    _queue.forEach(function(fn) { fn() });
+  cancel() {
+    this.scheduled = false;
   }
 
-  function flushAll() {
-    while (queue.length)
-      flush();
+  flush() {
+    if (this.scheduled)
+      this.execute();
   }
 
-  schedule.cancel = cancel;
-  schedule.flush = flush;
-  schedule.flushAll = flushAll;
-  return schedule;
+  flushAll() {
+    while (this.scheduled)
+      this.execute();
+  }
 }
-
-export default TestScheduler;

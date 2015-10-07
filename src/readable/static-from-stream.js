@@ -7,7 +7,7 @@ export default function fromStream(stream) {
   if (stream instanceof ReadableStream)
     return stream;
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return stream.subscribe(onNext, onError, onComplete);
-  });
+  return new ReadableStream(
+    (push, fail, complete) => stream.subscribe(push, fail, complete)
+  );
 }

@@ -4,19 +4,23 @@ import ReadableStream from './constructor';
  * @param {ReadableStream} stream
  * @returns {ReadableStream}
  */
-export default function concat(stream) {
-  var self = this;
-  var subscr1, subscr2;
+export default function concat(...streams) {
+  if (streams.length === 0)
+    return this;
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    subscr1 = self.subscribe(onNext, onError, function() {
-      subscr2 = stream.subscribe(onNext, onError, onComplete);
-    });
+  return new ReadableStream((push, fail, complete) => {
+    var subscriptions = [];
+    var index = 0;
+    streams = [ this, ...streams ];
+    onComplete();
+    return () => subscriptions.forEach(sub => sub.cancel());
 
-    return function() {
-      subscr1.cancel();
-      if (subscr2)
-        subscr2.cancel();
-    };
+    function onComplete() {
+      if (index === streams.length)
+        complete();
+
+      subscriptions[index] = streams[index].subscribe(push, fail, onComplete);
+      index++;
+    }
   });
 }

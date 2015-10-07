@@ -24,50 +24,61 @@ import { isPromise } from '../utils';
  */
 export default function takeUntil(value, context) {
   if (typeof value === 'function')
-    return takeUntil_function(this, value, context);
+    return takeUntil_function.call(this, value, context);
+
   if (isPromise(value))
-    return takeUntil_promise(this, value);
-  return takeUntil_stream(this, value);
+    return takeUntil_promise.call(this, value);
+
+  return takeUntil_stream.call(this, value);
 }
 
-function takeUntil_function(self, test, context) {
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    var subscription = self.subscribe(function(value) {
+
+function takeUntil_function(test, context) {
+  return new ReadableStream((push, fail, complete) => {
+    var subscription = self.subscribe(onNext, fail, complete);
+    return subscription;
+
+    function onNext(value) {
       if (test.call(context, value)) {
         subscription.cancel();
-        onComplete();
-      } else
-        onNext(value);
-    }, onError, onComplete);
-
-    return subscription;
+        complete();
+      } else {
+        push(value);
+      }
+    }
   });
 }
 
-function takeUntil_promise(self, promise) {
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    var subscription = self.subscribe(onNext, onError, onComplete);
+
+function takeUntil_promise(promise) {
+  return new ReadableStream((push, fail, complete) => {
+    var subscription = this.subscribe(push, fail, complete);
+
     promise
-      .then(subscription.cancel, subscription.cancel)
-      .then(onComplete, onError);
+      .then(() => subscription.cancel(), () => subscription.cancel())
+      .then(complete, fail);
+
     return subscription;
   });
 }
 
-function takeUntil_stream(self, stream) {
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    var subscription = self.subscribe(onNext, onError, onComplete);
-    var secondSubscription = stream.subscribe(end, function(error) {
-      subscription.cancel();
-      onError(error);
-    }, end);
+
+function takeUntil_stream(stream) {
+  return new ReadableStream((push, fail, complete) => {
+    var subscription = this.subscribe(push, fail, complete);
+    var secondSubscription = stream.subscribe(end, onError, end);
+
+    return end;
 
     function end() {
       secondSubscription.cancel();
       subscription.cancel();
-      onComplete();
+      complete();
     }
 
-    return end;
+    function onError(error) {
+      subscription.cancel();
+      fail(error);
+    }
   });
 }

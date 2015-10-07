@@ -20,21 +20,23 @@ import interval from './static-interval';
 export default function fromArray(array, scheduler) {
   var flow = interval(scheduler);
 
-  return new ReadableStream(function(onNext, onError, onComplete) {
+  return new ReadableStream((push, fail, complete) => {
     if (!array.length) {
-      scheduler(onComplete);
+      scheduler(complete);
       return;
     }
 
-    var subscription = flow.subscribe(function(index) {
-      onNext(array[index]);
+    var subscription = flow.subscribe(onNext, fail, complete);
+
+    function onNext(index) {
+      push(array[index]);
       if (index + 1 === array.length)
         end();
-    }, onError, onComplete);
+    }
 
     function end() {
       subscription.cancel();
-      onComplete();
+      complete();
     }
 
     return end;

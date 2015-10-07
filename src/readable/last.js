@@ -4,18 +4,19 @@
  * @param {Number} count A positive integer - The number of items to collect.
  * @returns {Promise<Array<T>>}
  */
-export default function last(count) {
-  count = count || 1;
-  var self = this;
-  var values = [];
-
+export default function last(count = 1) {
   return new Promise(function(resolve, reject) {
-    self.subscribe(function(value) {
+    var values = [];
+    this.subscribe(onNext, reject, onComplete);
+
+    function onNext(value) {
       values.push(value);
       if (values.length >= count)
         values.shift();
-    }, reject, function() {
+    }
+
+    function onComplete() {
       resolve(values);
-    });
+    }
   });
 }

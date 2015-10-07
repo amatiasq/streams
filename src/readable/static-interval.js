@@ -1,5 +1,5 @@
 import ReadableStream from './constructor';
-import { immediate } from '../schedulers';
+import { ImmediateScheduler } from '../schedulers';
 
 /**
  * Creates a infinite stream that will use `scheduler` to fire values. You can
@@ -19,23 +19,14 @@ import { immediate } from '../schedulers';
  * @returns {ReadableStream} A stream that will emit a value returned by
  *   `valueGenerator` each time `scheduler` fires.
  */
-export default function interval(scheduler, fn) {
-  var count = 0;
-  var timeout;
-  fn = fn || function(a) { return a };
-  scheduler = scheduler || immediate;
-
-  return new ReadableStream(function(onNext) {
-    function scheduleNext() {
-      timeout = scheduler(function() {
-        scheduleNext();
-        onNext(fn(count++));
-      });
-    }
-
-    scheduleNext();
-    return function() {
-      scheduler.cancel(timeout);
-    };
+export default function interval(scheduler = new ImmediateScheduler(), fn = a => a) {
+  return new ReadableStream(push => {
+    var count = 0;
+    scheduler.listen(() => {
+      scheduler.schedule();
+      push(fn(count++));
+    });
+    scheduler.schedule();
+    return () => scheduler.cancel();
   });
 }
