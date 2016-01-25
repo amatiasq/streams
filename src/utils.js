@@ -1,20 +1,25 @@
+define(require => {
+  return {
+    es6class,
+  };
 
-export function extend(target) {
-  [].slice.call(arguments, 1).forEach(function(source) {
-    Object.keys(source).forEach(function(key) {
-      target[key] = source[key];
+  function es6class(constructor, static, instance) {
+    Object.defineProperties(constructor, toDescriptors(static));
+    Object.defineProperties(constructor.prototype, toDescriptors(instance));
+    return constructor;
+  }
+
+  function toDescriptors(methods, properties = {
+    writable: true,
+    configurable: true,
+    enumerable: false,
+  }) {
+    var descriptors = {};
+
+    Object.keys(methods).forEach(name => {
+      descriptors[name] = Object.assign({ value: methods[name], }, properties);
     });
-  });
-}
 
-export function isFunction(object) {
-  return typeof object === 'function';
-}
-
-export function isPromise(object) {
-  return object && isFunction(object.then);
-}
-
-export function identity(value) {
-  return value;
-}
+    return descriptors;
+  }
+});
