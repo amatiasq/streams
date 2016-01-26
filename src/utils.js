@@ -1,25 +1,21 @@
-define(require => {
-  return {
-    es6class,
-  };
+/** @private */
+export function es6class(constructor, statics, instance) {
+  Object.defineProperties(constructor, toDescriptors(statics));
+  Object.defineProperties(constructor.prototype, toDescriptors(instance));
+  return constructor;
+}
 
-  function es6class(constructor, static, instance) {
-    Object.defineProperties(constructor, toDescriptors(static));
-    Object.defineProperties(constructor.prototype, toDescriptors(instance));
-    return constructor;
-  }
+function toDescriptors(methods, properties = {
+  writable: true,
+  configurable: true,
+  enumerable: false,
+}) {
+  var descriptors = {};
 
-  function toDescriptors(methods, properties = {
-    writable: true,
-    configurable: true,
-    enumerable: false,
-  }) {
-    var descriptors = {};
+  Object.keys(methods).forEach(name => {
+    let method = methods[name];
+    descriptors[name] = Object.assign({ value: method }, properties);
+  });
 
-    Object.keys(methods).forEach(name => {
-      descriptors[name] = Object.assign({ value: methods[name], }, properties);
-    });
-
-    return descriptors;
-  }
-});
+  return descriptors;
+}

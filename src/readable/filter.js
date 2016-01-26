@@ -1,17 +1,16 @@
-import ReadableStream from './constructor';
-
 /**
- * @param {Function} test
- * @param {Object} context
- * @returns {ReadableStream}
+ * The filter() method creates a new stream with all elements that pass the test implemented by the provided function.
+ *
+ * @method ReadableStream#filter
+ * @param {TestIterator} test - Function to test each element of the array. Return true to keep the element, false otherwise.
+ * @param {Object} [context] - Value to use as this when executing callback.
+ * @returns {ReadableStream} A subset of this stream.
  */
 export default function filter(test, context) {
-  var self = this;
-  var count = 0;
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return self.subscribe(function(value) {
-      if (test.call(context, value, count++, self))
-        onNext(value);
-    }, onError, onComplete);
+  return new this.constructor(push => {
+    return this.forEach((value, index, stream) => {
+      if (test.call(context, value, index, stream))
+        push(value);
+    });
   });
 }

@@ -1,21 +1,16 @@
-import ReadableStream from './constructor';
-
 /**
- * @returns {ReadableStream}
+ * The filter() method creates a new stream with all elements that pass the test implemented by the provided function.
+ *
+ * @method ReadableStream#flatten
+ * @param {TestIterator} test - Function to test each element of the array. Return true to keep the element, false otherwise.
+ * @param {Object} [context] - Value to use as this when executing callback.
+ * @returns {ReadableStream} A subset of this stream.
  */
-export default function flatten() {
-  var self = this;
-  var promises = [];
-
-  return new ReadableStream(function(onNext, onError, onComplete) {
-    return self.subscribe(function(value) {
-      if (value instanceof ReadableStream) {
-        value.subscribe(onNext, onError);
-        promises.push(value.toPromise());
-      } else
-        onNext(value);
-    }, onError, function() {
-      Promise.all(promises).then(onComplete);
+export default function flatten(test, context) {
+  return new this.constructor(push => {
+    return this.forEach((value, index, stream) => {
+      if (test.call(context, value, index, stream))
+        push(value);
     });
   });
 }

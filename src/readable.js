@@ -1,98 +1,71 @@
-define(require => {
-  let { es6class } = require('./utils');
+/**
+ * A consumable stream which is controlled by the creator.
+ */
+export default class ReadableStream {
+  /**
+   * Creates a readable stream, you can listen to the stream values using {@link ReadableStream#forEach}
+   * It receives a function that will be invoked when someone subscribes to this stream, this function should handle the callbacks for the subscription:
+   *
+   * - `onNext(value)`
+   * - `onError(error)`
+   * - `onComplete()`
+   *
+   * That function may return a `Function` or a {@link CancellablePromise} instance, in that case if the subscription for this stream is cancelled the returned function will be invoked or the returned promise will be cancelled.
+   *
+   * @param {onSubscribe} onSubscribe - Function to be invoked when someone subscribes to this stream.
+   * @returns {ReadableStream} A new instance
+   */
+  constructor(onSubscribe) {
+    this._subscribe = onSubscribe;
+  }
 
-  return es6class(require('./readable/constructor'), {
+  /**
+   * A promise representing the length property represents an unsigned, 32-bit integer that is always numerically greater than the highest index in the array.
+   * @type {Promise<Number>}
+   */
+  get length() {
+    if (!this._length)
+      this._length = this.forEach(() => {});
+    return this._length;
+  }
 
-  }, {
-    subscribe: require('./readable/subscribe'),
-  });
-
-  // let empty = require('./readable/static-empty');
-  // let fromArray = require('./readable/static-from-array');
-  // let fromEvent = require('./readable/static-from-event');
-  // let fromPromise = require('./readable/static-from-promise');
-  // let fromStream = require('./readable/static-from-stream');
-  // let fromWritable = require('./readable/static-from-writable');
-  // let _from = require('./readable/static-from');
-  // let interval = require('./readable/static-interval');
-  // let merge = require('./readable/static-merge');
-  // let noop = require('./readable/static-noop');
-  // let range = require('./readable/static-range');
-  // let repeat = require('./readable/static-repeat');
-  // let staticSingle = require('./readable/static-single');
-  // let _throw = require('./readable/static-throw');
-  // let staticZip = require('./readable/static-zip');
-
-  // let accumulate = require('./readable/accumulate');
-  // let concat = require('./readable/concat');
-  // let delay = require('./readable/delay');
-  // let every = require('./readable/every');
-  // let filter = require('./readable/filter');
-  // let first = require('./readable/first');
-  // let flatten = require('./readable/flatten');
-  // let flattenArray = require('./readable/flatten-array');
-  // let forEach = require('./readable/for-each');
-  // let last = require('./readable/last');
-  // let map = require('./readable/map');
-  // let reduce = require('./readable/reduce');
-  // let single = require('./readable/single');
-  // let skip = require('./readable/skip');
-  // let skipUntil = require('./readable/skip-until');
-  // let some = require('./readable/some');
-  // let subscribe = require('./readable/subscribe');
-  // let take = require('./readable/take');
-  // let takeUntil = require('./readable/take-until');
-  // let toArray = require('./readable/to-array');
-  // let toPromise = require('./readable/to-promise');
-  // let unique = require('./readable/unique');
-  // let until = require('./readable/until');
-  // let zip = require('./readable/zip';}));
+  // DEBUG ONLY
+  /** @private */
+  log(prefix = '[STREAM-LOGGER]') {
+    /* globals console */
+    return this
+      .forEach(value => console.log(prefix, '[VALUE]', value))
+      .catch(error => console.log(prefix, '[ERROR]', error))
+      .then(() => console.log(prefix, '[COMPLETED]'));
+  }
+}
 
 
-  Object.assign(ReadableStream, {
-    // empty,
-    // fromArray,
-    // fromEvent,
-    // fromPromise,
-    // fromStream,
-    // fromWritable,
-    // from: _from,
-    // interval,
-    // merge,
-    // noop,
-    // range,
-    // repeat,
-    // single: staticSingle,
-    // throw: _throw,
-    // zip: staticZip,
-  });
+import { es6class } from './utils';
+import concat from './readable/concat';
+import entries from './readable/entries';
+import every from './readable/every';
+import filter from './readable/filter';
+import forEach from './readable/for-each';
+import keys from './readable/keys';
+import map from './readable/map';
+import reduce from './readable/reduce';
+import slice from './readable/slice';
+import some from './readable/some';
+import values from './readable/values';
 
-  Object.assign(ReadableStream.prototype, {
-    // accumulate,
-    // concat,
-    // delay,
-    // every,
-    // filter,
-    // first,
-    // flatten,
-    // flattenArray,
-    // forEach,
-    // last,
-    // map,
-    // reduce,
-    // single,
-    // skip,
-    // skipUntil,
-    // some,
-    // subscribe,
-    // take,
-    // takeUntil,
-    // toArray,
-    // toPromise,
-    // unique,
-    // until,
-    // zip,
-  });
+es6class(ReadableStream, {
 
-  return ReadableStream;
+}, {
+  concat,
+  entries,
+  every,
+  filter,
+  forEach,
+  keys,
+  map,
+  reduce,
+  slice,
+  some,
+  values,
 });
