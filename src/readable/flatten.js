@@ -2,15 +2,10 @@
  * The filter() method creates a new stream with all elements that pass the test implemented by the provided function.
  *
  * @method ReadableStream#flatten
- * @param {TestIterator} test - Function to test each element of the array. Return true to keep the element, false otherwise.
- * @param {Object} [context] - Value to use as this when executing callback.
+ * @param {f{ deep : Boolean, array : Boolean, streams : Boolean }} [options] - Modifies the operation:
+ *    - `deep`: Flatten also the content of this
  * @returns {ReadableStream} A subset of this stream.
  */
-export default function flatten(test, context) {
-  return new this.constructor(push => {
-    return this.forEach((value, index, stream) => {
-      if (test.call(context, value, index, stream))
-        push(value);
-    });
-  });
+export default function flatten({ deep = false, arrays, streams } = {}) {
+  // TODO
 }

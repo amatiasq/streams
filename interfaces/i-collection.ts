@@ -18,7 +18,7 @@ interface ICollection<T> {
 
   // extras
   flatten(options : { deep : Boolean }) : ICollection<T>;
-  zip(... collection : ICollection) : ICollection; // zip[1,2],[3,4],[5,6]) = [[1,3,5],[2,4,6]];
+  zip(... collection : ICollection) : ICollection; // zip([1,2],[3,4],[5,6]) = [[1,3,5],[2,4,6]];
   single() : Value<T>; // throws error if length !== 1
   first() : Value<T>; // immutable shift
   last() : Value<T>; // immutable pop
