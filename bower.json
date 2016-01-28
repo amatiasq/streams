@@ -1,0 +1,21 @@
+{
+  "name": "stream",
+  "description": "",
+  "main": "gruntfile.js",
+  "authors": [
+    "A. Matías Quezada <amatiasq@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/amatiasq/streams",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "streams": "whatwg/streams"
+  }
+}
